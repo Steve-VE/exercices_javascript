@@ -1,0 +1,108 @@
+.mastermind{
+    width: fit-content;
+
+    margin: 0 auto;
+    padding: 12px;
+    
+    .row{
+        width: 200px;
+        height: 50px;
+        padding: 6px;
+        
+        background-color: rgb(221, 189, 147);
+        border: 1px solid black;
+        
+        $radius: 20px;
+        &:first-child{
+            border-top-left-radius: $radius;
+            border-top-right-radius: $radius;
+        }
+        &:last-child{
+            border-bottom-width: 2px;
+            border-bottom-left-radius: $radius;
+            border-bottom-right-radius: $radius;
+        }
+
+        &.active{
+            // background-color: rgb(241, 241, 188);
+            box-shadow: 0 0 8px 4px rgba(255, 255, 255, 1) inset;
+        }
+
+        .case{
+            display: block;
+            // padding: 1px;
+
+            float: left;
+
+            width: 20%;
+            height: 100%;
+
+            // border: 1px solid black;
+
+            &:empty{
+                border-radius: 50%;
+                background: radial-gradient(rgba(0, 0, 0, 0.5) 20%, transparent 30%);
+            }
+
+            .piece{
+                width: 100%;
+                height: 100%;
+            }
+
+            > .clue{
+                width: 50%;
+                height: 50%;
+
+                float: left;
+
+                border: 2px solid rgba(0, 0, 0, 0.5);
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.2);
+
+                &.valid{
+                    border-color: rgb(42, 87, 0);
+                    background-color: $green;
+                }
+                &.near{
+                    border-color: rgb(105, 55, 8);
+                    background-color: $orange;
+                }
+            }
+        }
+    }
+}
+
+.piece{
+    position: relative;
+    width: 50px;
+    height: 50px;
+
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+
+    // box-shadow: 
+    // 1px 2px 2px 2px rgba(0, 0, 0, 0.5),
+    // -1px -2px 2px 2px rgba(0, 0, 0, 0.5) inset,
+    // -2px -3px 2px 2px rgba(255, 255, 255, 0.3) inset;
+
+    @each $color in red, orange, green, blue{
+        &.#{$color}{
+            background-color: map-get($colors, $color);
+        }
+    }
+
+    // &:after{
+    //     display: block;
+    //     content: "";
+    //     width: 20%;
+    //     height: 20%;
+
+    //     position: relative;
+    //     top: 20%;
+    //     left: 20%;
+
+    //     background-color: rgba(255, 255, 255, 0.6);
+    //     border-radius: 50%;
+    //     box-shadow: 0 0 8px 6px rgba(255, 255, 255, 0.4);
+    // }
+}

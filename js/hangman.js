@@ -1,5 +1,5 @@
-/*/////////////
-// VARIABLES //
+  /*/////////////
+ // VARIABLES //
 /////////////*/
 
 // Liste de mot (on se servira d'une fonction pour en choisir un au hasard)
@@ -129,7 +129,7 @@ let drawHangMan = (count) => { // Fonction servant à dessiner l'échaveaux et l
     }
 
     console.log(hangman);
-}
+};
 
 let restart = (word) => { 
     let def = "";
@@ -161,7 +161,7 @@ let guessLetter = () => { // Fonction pour proposer une lettre
 let drawWord = (listOfWord) => { // Fonction pour piocher un mot au hasard dans la liste de mots passée en paramètre
     let index = Math.floor(Math.random() * listOfWord.length);
     return listOfWord[index].toUpperCase();
-}
+};
 
 let hangman = () => { // Fonction qui fait tourner le jeu du Pendu :)
     let replay;

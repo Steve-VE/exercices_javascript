@@ -1,4 +1,3 @@
-
 let moreOrLess = () => { // Fonction qui fait tourner le jeu du plus ou du moins
     
     // Minimum
@@ -69,4 +68,4 @@ let moreOrLess = () => { // Fonction qui fait tourner le jeu du plus ou du moins
 
 let random = (min, max) => { // Fonction qui renvoit un nombre aléatoire compris entre un minimum et un maximum
     return Math.floor(Math.random() * (max - min)) + min;
-}
+};
