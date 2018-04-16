@@ -5,9 +5,10 @@
     padding: 12px;
     
     .row{
-        width: 200px;
-        height: 50px;
+        width: fit-content;
+        width: -moz-fit-content;
         padding: 6px;
+        overflow: auto;
         
         background-color: rgb(221, 189, 147);
         border: 1px solid black;
@@ -24,20 +25,18 @@
         }
 
         &.active{
-            // background-color: rgb(241, 241, 188);
             box-shadow: 0 0 8px 4px rgba(255, 255, 255, 1) inset;
         }
 
         .case{
             display: block;
-            // padding: 1px;
-
             float: left;
 
-            width: 20%;
-            height: 100%;
-
-            // border: 1px solid black;
+            width: 2vw;
+            height: 2vw;
+            min-width: 50px;
+            min-height: 50px;
+            padding: 2px;
 
             &:empty{
                 border-radius: 50%;
@@ -88,6 +87,12 @@
     @each $color in red, orange, green, blue{
         &.#{$color}{
             background-color: map-get($colors, $color);
+        }
+    }
+
+    &.interactive{
+        &:hover{
+            border-color: white;
         }
     }
 
