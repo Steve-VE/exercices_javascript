@@ -59,7 +59,10 @@ let addPiece = (value) => { // Fonction à appeler lorsque l'on veut ajouter un 
         // On crée la div...
         let newPiece = document.createElement("div");
         // On lui attribut ses classes CSS...
-        newPiece.classList.add('piece', colors[value], 'interactive');
+        // newPiece.classList.add('piece', colors[value], 'interactive'); // Pas supporter par IE
+        newPiece.classList.add('piece');
+        newPiece.classList.add(colors[value]);
+        newPiece.classList.add('interactive');
         // On lui attribut un titre...
         let title = document.createAttribute("title");
         title.value = "Cliquez pour supprimer";
