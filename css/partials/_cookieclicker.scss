@@ -2,20 +2,25 @@ $cookie-color: rgb(206, 145, 65);
 $chocolate-color: rgb(44, 19, 5);
 
 #cookieclicker{
-    $size: 20vw;
+    $size: 600px;
 
     width: $size;
     height: $size;
-    margin: 10vh ($size/2);
+    margin: 10vh auto;
 
     user-select: none;
 
-    perspective: 200px;
+    perspective: 800px;
     
+    .container{
+        position: absolute;
+        width: 60%;
+    }
+
     .cookie{
-        // @extend .button;
-        width: 100%;
-        height: 100%;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
         
         border: 4px solid #000;
         border-radius: 50%;
@@ -28,50 +33,52 @@ $chocolate-color: rgb(44, 19, 5);
 
         cursor: pointer;
         
-        background: 
-        radial-gradient(
-            circle at 80% 70%,
-            $chocolate-color 14%,
-            transparent 15%
-        ),
-        radial-gradient(
-            circle at 20% 50%,
-            $chocolate-color 9%,
-            transparent 10%
-        ),
-        radial-gradient(
-            circle at 33% 80%,
-            $chocolate-color 4%,
-            transparent 5%
-        ),
-        radial-gradient(
-            circle at 75% 20%,
-            $chocolate-color 4%,
-            transparent 5%
-        ),
-        radial-gradient(
-            circle at 65% 50%,
-            $chocolate-color 2%,
-            transparent 3%
-        ),
-        radial-gradient(
-            circle at 50% 95%,
-            $chocolate-color 0%,
-            transparent 1%
-        ),
-        radial-gradient(
-            circle at 40% 10%,
-            $chocolate-color 2%,
-            transparent 3%
-        );
-        background-color: $cookie-color;
+        &{ // Background
+            background: 
+            radial-gradient(
+                circle at 80% 70%,
+                $chocolate-color 14%,
+                transparent 15%
+            ),
+            radial-gradient(
+                circle at 20% 50%,
+                $chocolate-color 9%,
+                transparent 10%
+            ),
+            radial-gradient(
+                circle at 33% 80%,
+                $chocolate-color 4%,
+                transparent 5%
+            ),
+            radial-gradient(
+                circle at 75% 20%,
+                $chocolate-color 4%,
+                transparent 5%
+            ),
+            radial-gradient(
+                circle at 65% 50%,
+                $chocolate-color 2%,
+                transparent 3%
+            ),
+            radial-gradient(
+                circle at 50% 95%,
+                $chocolate-color 0%,
+                transparent 1%
+            ),
+            radial-gradient(
+                circle at 40% 10%,
+                $chocolate-color 2%,
+                transparent 3%
+            );
+            background-color: $cookie-color;
+        }
         
         box-shadow:
         2px 2px 8px 2px rgba(255, 243, 77, 0.5) inset,
         -20px -20px 20px 10px rgba(0, 0, 0, 0.3) inset,
         -5px -10px 10px 5px rgba(0, 0, 0, 0.3) inset;
         
-        transform: scale(1) rotate3d(1, 0, 0, 20deg);
+        transform: scale(1);
         transition: transform 0.05s;
 
         &:hover{
@@ -79,11 +86,11 @@ $chocolate-color: rgb(44, 19, 5);
             color: white;
 
             background-color: $cookie-color;
-            transform: scale(1.05) rotate3d(1, 0, 0, 15deg);
+            transform: scale(1.05);
         }
         
         &:active{
-            transform: scale(0.9) rotate3d(1, 0, 0, 25deg);
+            transform: scale(0.9);
         }
     }
 
@@ -93,7 +100,9 @@ $chocolate-color: rgb(44, 19, 5);
     }
     
     .shop{
-        width: 100%;
+        position: absolute;
+        right: 0;
+        width: 40%;
 
         .button{
             display: block;

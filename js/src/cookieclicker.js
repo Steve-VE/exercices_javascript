@@ -58,7 +58,6 @@ class Option{
     increasePrice(){
         this.currentPrice *= 2;
     }
-    
     buy(){
         if(this.customer.currency >= this.currentPrice && !this.HTMLElement.classList.contains("inactive")){
             this.customer.spend(this.currentPrice);
@@ -74,9 +73,8 @@ class Option{
             return false;
         }
     }
-    
     check(){
-        if( !this.display && this.customer.currency >= (this.currentPrice * 0.5) ){
+        if( !this.display && (this.customer.currency >= (this.currentPrice * 0.5) || this.value > 1 )){
             this.display = true;
         }
 
@@ -115,7 +113,6 @@ class Option{
             this.parent.add(this.HTMLElement);
         }
     }
-
     onClick(){
         /* Do Something ! */
         if(this.buy()){
@@ -130,7 +127,6 @@ class Option{
             }
         }
     }
-
     getText(){
         let text = "";
 
@@ -146,6 +142,12 @@ class Option{
         
 
         return text;
+    }
+    adjustPrice(p_count){
+        while(p_count > 0){
+            this.increasePrice();
+            p_count--;
+        }
     }
 }
 
@@ -163,22 +165,17 @@ class Profil{
 
         this.stat = document.querySelector(".info");
         this.shop = null;
-
-        this.readCookie();
     }
-
     gain(p_amount = 1){
         this.currency += p_amount * this.multiplier * this.boostValue;
         this.refreshInfo();
 
         this.saveCookie();
     }
-    
     spend(p_amount){
         this.currency -= p_amount;
         this.refreshInfo();
     }
-
     refreshInfo(){
         this.stat.innerHTML = "<p><strong>";
         this.stat.innerHTML += + this.currency + " cookies</strong></p>";
@@ -191,15 +188,11 @@ class Profil{
             this.shop.refresh();
         }
     }
-
-
     addAutoClick(){
         if(this.autoClickerInterval == null){
             let self = this;
             this.autoClickerInterval = window.setInterval( 
                 function(){
-                    // let source = document.querySelector(".cookie");
-                    // source.dispatchEvent("click")
                     self.gain(self.autoClicker);
                 }, 
                 1 * 1000
@@ -209,14 +202,13 @@ class Profil{
             this.autoClicker++;
         }
     }
-
     shopping(p_shop){
         this.shop = p_shop;
+        this.readCookie();
     }
-
-    activeBoost(){
+    activeBoost(p_boost_value = 2){
         let self = this;
-        this.boostValue = 3;
+        this.boostValue = p_boost_value;
         this.refreshInfo();
 
         if(this.boostActive == false){
@@ -228,7 +220,6 @@ class Profil{
             }, 30 * 1000);
         }
     }
-
     saveCookie(){
         let date = new Date();
         date.setTime( date.getTime() + ( 7 * 60 * 60 * 24 * 1000 ));
@@ -243,21 +234,66 @@ class Profil{
         newCookie += "path=/";
         document.cookie = newCookie;
 
-        newCookie = "autoclicker=" + this.shop.options.autoClicker.value + "; ";
+        newCookie = "autoClicker=" + this.shop.options.autoClicker.value + "; ";
         newCookie += "expire=" + date.toUTCString() + "; ";
         newCookie += "path=/";
         document.cookie = newCookie;
     }
-
     readCookie(){
-        let cookieData = document.cookie;
-        cookieData = cookieData.split(";");
+        // let cookieData;
+        let cookieData = {
+            cookie: 0,
+            multiplier: 1,
+            autoClicker: 0
+        };
+        let cookieRawData = document.cookie;
+        cookieRawData = cookieRawData.split(";");
+        
+        for(let i = 0; i < cookieRawData.length; i++){
+            let line = cookieRawData[i];
+            line = line.trim();
+            line = line.split("=");
+
+            console.log(line);
+            cookieData[line[0]] = parseInt(line[1]);
+        }
         console.log(cookieData);
+
+        this.currency = cookieData.cookie;
+
+        this.multiplier = cookieData.multiplier;
+        this.shop.options.multiplier.value = cookieData.multiplier;
+        this.shop.options.multiplier.adjustPrice(cookieData.multiplier - 1);
+        
+        if(this.autoClicker > 0){
+            this.autoClicker = cookieData.autoClicker;
+            this.shop.options.autoClicker.value = cookieData.autoClicker;
+            this.shop.options.autoClicker.adjustPrice(cookieData.autoClicker);
+            this.addAutoClick();
+        }
+
     }
 }
 
 
 function reset(){
-    document.cookie = "";
+    let date = new Date();
+    date.setTime( date.getTime() - (1000 * 60 * 60 * 24));
+
+    let newCookie = "cookie=0; ";
+    newCookie += "expire=" + date.toUTCString() + "; ";
+    newCookie += "path=/";
+    document.cookie = newCookie;
+    
+    newCookie = "multiplier=1; ";
+    newCookie += "expire=" + date.toUTCString() + "; ";
+    newCookie += "path=/";
+    document.cookie = newCookie;
+
+    newCookie = "autoClicker=0; ";
+    newCookie += "expire=" + date.toUTCString() + "; ";
+    newCookie += "path=/";
+    document.cookie = newCookie;
+
     console.log("No more cookie for you :'( ");
 }
