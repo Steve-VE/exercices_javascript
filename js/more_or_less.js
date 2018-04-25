@@ -23,7 +23,7 @@ var moreOrLess = function moreOrLess() {
     alert("Bienvenue étranger !\n\nTa tâche consistera à trouver un nombre compris entre " + min + " et " + max + " en faisant un minimum de proposition.\n\nBonne chance !");
 
     while (myNumber != secretNumber) {
-        rawPrompt = prompt("Quelle est ta proposition ?");
+        var rawPrompt = prompt("Quelle est ta proposition ?");
         myNumber = parseInt(rawPrompt);
 
         count++;

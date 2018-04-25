@@ -1,0 +1,140 @@
+$cookie-color: rgb(206, 145, 65);
+$chocolate-color: rgb(44, 19, 5);
+
+#cookieclicker{
+    $size: 20vw;
+
+    width: $size;
+    height: $size;
+    margin: 10vh ($size/2);
+
+    user-select: none;
+
+    perspective: 200px;
+    
+    .cookie{
+        // @extend .button;
+        width: 100%;
+        height: 100%;
+        
+        border: 4px solid #000;
+        border-radius: 50%;
+        
+        line-height: 150px;
+        text-align: center;
+        text-shadow: 0 0 4px $chocolate-color;
+        font-size: 2em;
+        color: white;
+
+        cursor: pointer;
+        
+        background: 
+        radial-gradient(
+            circle at 80% 70%,
+            $chocolate-color 14%,
+            transparent 15%
+        ),
+        radial-gradient(
+            circle at 20% 50%,
+            $chocolate-color 9%,
+            transparent 10%
+        ),
+        radial-gradient(
+            circle at 33% 80%,
+            $chocolate-color 4%,
+            transparent 5%
+        ),
+        radial-gradient(
+            circle at 75% 20%,
+            $chocolate-color 4%,
+            transparent 5%
+        ),
+        radial-gradient(
+            circle at 65% 50%,
+            $chocolate-color 2%,
+            transparent 3%
+        ),
+        radial-gradient(
+            circle at 50% 95%,
+            $chocolate-color 0%,
+            transparent 1%
+        ),
+        radial-gradient(
+            circle at 40% 10%,
+            $chocolate-color 2%,
+            transparent 3%
+        );
+        background-color: $cookie-color;
+        
+        box-shadow:
+        2px 2px 8px 2px rgba(255, 243, 77, 0.5) inset,
+        -20px -20px 20px 10px rgba(0, 0, 0, 0.3) inset,
+        -5px -10px 10px 5px rgba(0, 0, 0, 0.3) inset;
+        
+        transform: scale(1) rotate3d(1, 0, 0, 20deg);
+        transition: transform 0.05s;
+
+        &:hover{
+            line-height: 155px;
+            color: white;
+
+            background-color: $cookie-color;
+            transform: scale(1.05) rotate3d(1, 0, 0, 15deg);
+        }
+        
+        &:active{
+            transform: scale(0.9) rotate3d(1, 0, 0, 25deg);
+        }
+    }
+
+    .info{
+        margin-top: 32px;
+        text-align: center;
+    }
+    
+    .shop{
+        width: 100%;
+
+        .button{
+            display: block;
+            width: 100%;
+            // max-width: none;
+            margin: 12px auto;
+            padding: 12px;
+
+            text-transform: none;
+            text-align: center;
+            font-size: 1em;
+
+            strong{
+                font-size: 1.2em;
+            }
+
+            &:hover{
+                strong{
+                    color: black;
+                }
+                .price{
+                    color: orangered;
+                }
+            }
+
+            &.inactive{
+                // cursor: default;
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+        }
+    }
+
+    .price{
+        color: rgba(255, 255, 255, 0.5);
+
+        &::before{
+            content: "(";
+        }
+        &::after{
+            content: ")";
+        }
+    }
+}
