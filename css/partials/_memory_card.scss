@@ -1,0 +1,46 @@
+$color-back: rgba(50, 70, 100, 0.5);
+
+.game_container{
+    width: 50%;
+    width: 80%;
+    height: 100vh;
+    margin: 0 auto;
+
+    border: 1px solid black;
+
+    .card{
+        $size: 200px;
+        $size2: $size * 0.5;
+        display: inline-block;
+
+        width: $size;
+        height: $size;
+        margin: ($size/10);
+
+        border: 1px solid $color-back;
+
+        cursor: pointer;
+
+        border-radius: 8%;
+
+
+        background: 
+        linear-gradient(45deg, $color-back 50%, transparent 51%), 
+        linear-gradient(135deg, transparent 50%, $color-back 51%);
+        background-color: rgb(207, 162, 95);
+        background-size: $size2 $size2;
+        background-position: 0 0, $size2 0;
+        // background-repeat: no-repeat;
+
+
+        &.yellow{
+            background-color: yellow;
+        }
+        &.blue{
+            background-color: blue;
+        }
+        &.red{
+            background-color: red;
+        }
+    }
+}
