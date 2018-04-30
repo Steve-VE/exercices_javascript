@@ -12,55 +12,117 @@ window.onload = function(){
         [ 0, 1, 2, 3, 4, 5, 6, 7 ]
     ];
     let fps = 33;
+    let beginingMaxTime = seconde(50) / fps;
 
+    let completeLevel;
     let selectedCard;
     let cards;
-    let maxTime = seconde(30) / fps;
+    let maxTime;
     let score;
     let remainingTime;
     let gameLoop;
+    let scoreBoard = null;
     
     // Booleans
     let canSelectCard;   // Player can select a card ?
     let gameStarted; // Game's started ?
     let returnTimeOut; // Need to know if two revealed cards need to be returned
+    let timeRunning;
     
     // HTML elements
     let gameContainer = document.querySelector(".game_container");
     let timeAmount = document.querySelector(".amount");
-    let btnStart, infoScore, infoTime;
+    let menu;
+    let btnStart, btnScoreBoard, infoScore, infoTime;
+    let scoreModal;
+    
 
     init();
 
+    // Functions
+
     function init(){
+        console.log("Init");
         resetVariables();
+        getScoreBoard();
+
+        menu = document.createElement("div");
+        menu.classList.add("menu");
 
         btnStart = document.createElement("div");
         btnStart.innerHTML = "<strong>Start</strong> a new <strong>Game</strong>";
         btnStart.classList.add("button-start");
         btnStart.addEventListener("click", gameStart);
+        
+        btnScoreBoard = document.createElement("div");
+        btnScoreBoard.innerHTML = "View the <strong>Scoreboard</strong>";
+        btnScoreBoard.classList.add("button-scoreboard");
+        btnScoreBoard.addEventListener("click", gameStart);
 
         infoScore = document.getElementById("score");
         infoTime = document.getElementById("time");
 
-        gameContainer.appendChild(btnStart);
+        gameContainer.appendChild(menu);
+        menu.appendChild(btnStart);
+        menu.appendChild(btnScoreBoard);
     }
-    
     function resetVariables(){
         gameLoop = null;
+        currentLevel = 0;
         score = 0;
+        completeLevel = 0;
         cards = [];
 
         selectedCard = [null, null];
+        maxTime = beginingMaxTime;
         remainingTime = maxTime;
 
         canSelectCard = true;   // Player can select a card ?
         gameStarted = false; // Game's started ?
         returnTimeOut = false; // Need to know if two revealed cards need to be returned
+        timeRunning = false;
     }
+    function nextLevel(){
+        console.log("next Level");
+        if(timeRunning){
+            timeRunning = false;
+        }
 
+        if(allCardsVisible()){
+            if(cards.length == 0){
+
+                if(currentLevel < levels.length - 1){
+                    currentLevel++;
+                }
+                
+                clearInterval(gameLoop);
+                gameLoop = null;
+                
+                gameContainer.innerHTML = "";
+                completeLevel++;
+                score += Math.floor((remainingTime / fps) / 5);
+                score += completeLevel * 2;
+                selectedCard = [null, null];
+                canSelectCard = true; 
+                
+                cards = [];
+                
+                remainingTime += seconde(15) / fps;
+                maxTime = remainingTime;
+                
+                gameStart();
+            }
+            else{
+                if(cards[0].disappear()){
+                    cards.splice(0, 1);
+                }
+            }
+        }
+    }
     function gameStart(){
+        console.log("Game Started !");
         if(gameLoop == null){
+            timeRunning = true;
             for(let i = 0; i < levels[currentLevel].length; i++){
                 let currentNumber = levels[currentLevel][i];
         
@@ -81,9 +143,15 @@ window.onload = function(){
             cards[i].generateHTML();
         }
     }
-
     function update(){
         if(gameStarted){
+            // Fade out of the Start Button
+            // if(getOpacity(menu) > 0){
+            //     menu.style.opacity = getOpacity(btnStart) - 0.1;
+            //     if(getOpacity(menu) == 0){
+            //         menu.style.display = "none";
+            //     } 
+            // }
             if(getOpacity(btnStart) > 0){
                 btnStart.style.opacity = getOpacity(btnStart) - 0.1;
                 if(getOpacity(btnStart) == 0){
@@ -96,7 +164,6 @@ window.onload = function(){
             }
             
             if(selectedCard[0] != null && selectedCard[1] != null){
-                // console.clear();
                 let cardA = selectedCard[0];
                 let cardB = selectedCard[1];
                 
@@ -124,36 +191,109 @@ window.onload = function(){
                 }
             }
             
-            
             if(remainingTime > 0){
-                remainingTime--;
-                let percent = (( remainingTime / maxTime) * 100);
-                let secondes =  Math.round(remainingTime / fps);
-                // timeAmount.title = secondes + " secondes.";
-
-                if(infoTime.innerHTML != secondes + "s"){
-                    let newValue = secondes + "s";
-                    if(secondes < 10){
-                        newValue = "0" + newValue;
+                if(gameComplete()){
+                    nextLevel();
+                }
+                else if(timeRunning){
+                    remainingTime--;
+                    let percent = (( remainingTime / maxTime) * 100);
+                    let secondes =  Math.round(remainingTime / fps);
+                    
+                    if(infoTime.innerHTML != secondes + "s"){
+                        let newValue = secondes + "s";
+                        if(secondes < 10){
+                            newValue = "0" + newValue;
+                        }
+                        infoTime.innerHTML = newValue;
                     }
-                    infoTime.innerHTML = newValue;
-                }
-                
-                if(window.innerWidth < window.innerHeight && window.innerWidth < 840){
-                    timeAmount.style.width = (( remainingTime / maxTime) * 100) + "%";
-                    timeAmount.style.height = "100%";
-                }
-                else{
-                    timeAmount.style.width = "100%";
-                    timeAmount.style.height = (( remainingTime / maxTime) * 100) + "%";
+                    
+                    if(window.innerWidth < window.innerHeight && window.innerWidth < 840){
+                        timeAmount.style.width = (( remainingTime / maxTime) * 100) + "%";
+                        timeAmount.style.height = "100%";
+                    }
+                    else{
+                        timeAmount.style.width = "100%";
+                        timeAmount.style.height = (( remainingTime / maxTime) * 100) + "%";
+                    }
                 }
             }
             else{
-                // alert("You lose :(");
                 gameEnd();
             }
         }
     }
+    function revealClass(type){
+        let classConnection = [
+            "green",
+            "white",
+            "blue",
+            "brown",
+            "yellow",
+            "red",
+            "pink",
+            "gray"
+        ];
+        return classConnection[type];
+    }
+    function gameEnd(){ // Call it when the game is over
+        console.log("Game Over");
+        clearInterval(gameLoop);
+        gameLoop = null;
+
+        infoTime.style.display = "none";
+        // infoScore.style.display = "none";
+        btnStart.style.display = "block";
+        gameContainer.innerHTML = "";
+        gameContainer.appendChild(btnStart);
+        btnStart.style.opacity = 1;
+        btnStart.addEventListener("click", gameStart);
+
+        if(scoreModal == null || scoreModal == "undefined"){
+            scoreModal = document.createElement("div");
+            scoreModal.innerHTML = "Your score :\n" + score;
+            let body = document.getElementsByTagName("body")[0];
+            body.appendChild(scoreModal);
+            console.log(body);
+            console.log(scoreModal);
+        }
+
+        resetVariables();
+    }
+    function gameComplete(){ // Return true if all pairs were found
+        let response = true;
+        for(let i = 0; i < cards.length; i++){
+            if(!cards[i].paired){
+                response = false;
+                break;
+            }
+        }
+        return response;
+    }
+    function allCardsVisible(){ // Return true if all cards was fully visible (it's usefull to not change level too abrutly)
+        let response = true;
+        for(let i = 0; i < cards.length; i++){
+            if(!cards[i].fullyVisible()){
+                response = false;
+                break;
+            }
+        }
+        return response;
+    }
+
+    function getScoreBoard(){
+        let request = new XMLHttpRequest();
+        request.open('GET', '/assets/data/memory_card_score.json');
+        request.onreadystatechange = ()=>{
+            if(request.readyState == 4 && request.status == "200"){
+                let data = JSON.parse(request.response);
+                scoreBoard = data;
+            }
+        };
+        request.send();
+    }
+
+    // Class
 
     class Card{
         constructor(p_parent, p_type){
@@ -163,6 +303,7 @@ window.onload = function(){
             this.selected = false;
             this.revealed = false;
             this.paired = false;
+            this.size = 1;
     
             this.rotateValue = 0;
         }
@@ -227,47 +368,23 @@ window.onload = function(){
                 }
             }
         }
-    }
 
-    function revealClass(type){
-        let classConnection = [
-            "green",
-            "white",
-            "blue",
-            "brown",
-            "yellow",
-            "red",
-            "pink",
-            "gray"
-        ];
-        return classConnection[type];
-    }
+        fullyVisible(){
+            return (this.rotateValue >= 180);
+        }
 
-    function gameEnd(){
-        console.log("Game Ended...");
-        clearInterval(gameLoop);
-        gameLoop = null;
-
-        infoTime.style.display = "none";
-        infoScore.style.display = "none";
-        btnStart.style.display = "block";
-        gameContainer.innerHTML = "";
-        gameContainer.appendChild(btnStart);
-        btnStart.style.opacity = 1;
-        btnStart.addEventListener("click", gameStart);
-
-        resetVariables();
-    }
-
-    function gameComplete(){
-        let response = true;
-        for(let i = 0; i < cards.length; i++){
-            if(!cards[i].paired){
-                response = false;
-                break;
+        disappear(){
+            if(this.size > 0.05){
+                this.size *= 0.66;
+                this.rotateValue += 30;
+                this.HTML.style.transform = "scale(" + this.size + ") rotateY(180deg) rotateZ(" + (this.rotateValue + 180) + "deg)";
+                return false;
+            }
+            else{
+                this.HTML.style.opacity = "0";
+                return true;
             }
         }
-        return response;
     }
 };
 

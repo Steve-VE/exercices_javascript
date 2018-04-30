@@ -6,3 +6,10 @@ $purple: #4976d8;
 $white: #e0e0e0;
 $black: #5a5a5a;
 $orange: #fb0;
+
+// CSS variables
+body{
+    --time-color: rgb(8, 187, 8);
+    --time-color-a4: rgba(8, 187, 8, 0.4);
+    --time-color-a8: rgba(8, 187, 8, 0.8);
+}
